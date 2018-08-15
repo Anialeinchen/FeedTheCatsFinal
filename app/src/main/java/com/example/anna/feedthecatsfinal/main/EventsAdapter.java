@@ -16,6 +16,10 @@ import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewHolder> {
 
+    public void setEvents(List<CatsFeedingEvent> events) {
+        this.events = events;
+    }
+
     private List<CatsFeedingEvent> events = new ArrayList<>();
 
     @NonNull
@@ -28,12 +32,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         CatsFeedingEvent event = events.get(position);
-
+        holder.bind(event);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return events.size();
     }
 
     class EventViewHolder extends RecyclerView.ViewHolder {
@@ -54,9 +58,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.EventViewH
 
         private void bind(CatsFeedingEvent event) {
             date.setText(String.valueOf(event.getDate()));
-//            caregiverMorning
-//            caregiverEvening
-            switch (EventType.values()[event.getType()]){
+            caregiverMorning.setText(event.getCaregiverMorning());
+            caregiverEvening.setText(event.getCaregiverEvening());
+
+            switch (EventType.values()[event.getType()]) {
                 case DAY:
                     morningShift.setBackgroundResource(R.color.active_label);
                     eveningShift.setBackgroundResource(R.color.active_label);
