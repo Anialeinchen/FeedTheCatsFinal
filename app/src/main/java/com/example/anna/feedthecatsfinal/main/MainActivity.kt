@@ -1,14 +1,15 @@
-package com.example.anna.feedthecatsfinal
+package com.example.anna.feedthecatsfinal.main
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.anna.feedthecatsfinal.CatsFeedingEvent
+import com.example.anna.feedthecatsfinal.R
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
-import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 events.clear()
                 for (child in dataSnapshot.children) {
                     child.getValue(CatsFeedingEvent::class.java)?.let {
-                        events.put(child.key, it)
+                        events.put(child.key ?: "", it)
                     }
                 }
                 Toast.makeText(this@MainActivity, "Got ${events.size} events", Toast.LENGTH_LONG).show()
