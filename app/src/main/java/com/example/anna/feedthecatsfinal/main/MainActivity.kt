@@ -22,30 +22,34 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setupFirebaseDb()
+        addDummyEvent()
+    }
+
+    private fun setupFirebaseDb() {
         // Write a message to the database
         dbRef = FirebaseDatabase.getInstance().getReference(TABLE)
 
         // Read from the database
         dbRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                events.clear()
-                for (child in dataSnapshot.children) {
-                    child.getValue(CatsFeedingEvent::class.java)?.let {
-                        events.put(child.key ?: "", it)
-                    }
-                }
+                refreshEventList(dataSnapshot)
                 Toast.makeText(this@MainActivity, "Got ${events.size} events", Toast.LENGTH_LONG).show()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
                 Toast.makeText(this@MainActivity, "Got an error: $error", Toast.LENGTH_LONG).show()
             }
         })
+    }
 
-        addDummyEvent()
+    private fun refreshEventList(dataSnapshot: DataSnapshot) {
+        events.clear()
+        for (child in dataSnapshot.children) {
+            child.getValue(CatsFeedingEvent::class.java)?.let {
+                events.put(child.key ?: "", it)
+            }
+        }
     }
 
     fun addDummyEvent() {
